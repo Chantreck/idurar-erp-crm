@@ -6,10 +6,7 @@ import react from '@vitejs/plugin-react';
 export default ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
-  const proxy_url =
-    process.env.VITE_DEV_REMOTE === 'remote'
-      ? process.env.VITE_BACKEND_SERVER
-      : 'http://localhost:8888/';
+  const proxy_url = 'http://150.241.91.135:8888/';
 
   const config = {
     plugins: [react()],
