@@ -6,12 +6,8 @@ services:
       - /usr/src/app/node_modules
     ports:
       - "8888:8888"
-    environment:
-      - NODE_ENV=development
-      - DATABASE=mongodb://mongo:27017/local-idurar-erp-crp
-      - PORT=8888
-      - NODE_OPTIONS=--openssl-legacy-provider
-      - JWT_SECRET=secret_key_1234
+    env_file:
+      - backend/.env
     command: sh -c "npm run setup && npm run dev"
     networks:
       - server-mongo
@@ -25,13 +21,12 @@ services:
       - /usr/src/app/node_modules
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - REACT_APP_API_URL=http://backend:8888/api
-      - NODE_OPTIONS=--openssl-legacy-provider
-
+    env_file:
+      - frontend/.env
     depends_on:
       - backend
+    networks:
+      - server-mongo
 
   mongo:
     image: mongo:6
