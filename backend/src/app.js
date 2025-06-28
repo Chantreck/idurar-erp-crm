@@ -15,6 +15,8 @@ const errorHandlers = require('./handlers/errorHandlers');
 const erpApiRouter = require('./routes/appRoutes/appApi');
 
 const fileUpload = require('express-fileupload');
+const { register } = require('./utils/emailService');
+
 // create our Express app
 const app = express();
 
@@ -33,6 +35,17 @@ app.use(compression());
 
 // // default options
 // app.use(fileUpload());
+
+//! Роут для метрик Prometheus
+app.get('/metrics', async (req, res) => {
+    try {
+        res.set('Content-Type', register.contentType);
+        res.end(await register.metrics());
+    } catch (error) {
+        console.error('Error fetching Prometheus metrics:', error);
+        res.status(500).send('Error fetching metrics');
+    }
+});
 
 // Here our API Routes
 

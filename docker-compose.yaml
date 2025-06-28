@@ -39,8 +39,34 @@ services:
     environment:
       - MONGO_INITDB_DATABASE=local-idurar-erp-crp
 
+  prometheus:
+    image: prom/prometheus:v3.4.2
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yml --web.enable-remote-write-receiver
+    networks:
+      - server-mongo
+
+  grafana:
+    image: grafana/grafana:12.0.2
+    container_name: grafana
+    ports:
+      - "3003:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    networks:
+      - server-mongo
+
 volumes:
   mongodb_data:
+  prometheus_data:
+  grafana_data:
 
 networks:
   server-mongo:
